@@ -59,7 +59,7 @@ namespace Navegador_Web
             this.irToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(884, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(884, 30);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -71,7 +71,7 @@ namespace Navegador_Web
             this.haciaAdelanteToolStripMenuItem,
             this.escribaAquíToolStripMenuItem});
             this.irToolStripMenuItem.Name = "irToolStripMenuItem";
-            this.irToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
+            this.irToolStripMenuItem.Size = new System.Drawing.Size(79, 26);
             this.irToolStripMenuItem.Text = "Navegar";
             // 
             // inicioToolStripMenuItem
@@ -105,10 +105,6 @@ namespace Navegador_Web
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox",
-            "https://github.com/",
-            "https://www.amazon.com/-/es/"});
             this.comboBox1.Location = new System.Drawing.Point(12, 31);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(791, 24);
@@ -122,7 +118,7 @@ namespace Navegador_Web
             this.webView21.Location = new System.Drawing.Point(12, 61);
             this.webView21.Name = "webView21";
             this.webView21.Size = new System.Drawing.Size(860, 387);
-            this.webView21.Source = new System.Uri("https://www.microsoft.com", System.UriKind.Absolute);
+            this.webView21.Source = new System.Uri("https://www.bing.com", System.UriKind.Absolute);
             this.webView21.TabIndex = 4;
             this.webView21.ZoomFactor = 1D;
             // 

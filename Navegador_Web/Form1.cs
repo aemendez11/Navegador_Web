@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Navegador_Web
 {
@@ -28,9 +29,17 @@ namespace Navegador_Web
         {
 
         }
-
+        private void Guardar(string nombreArchivo, string texto)
+        {
+            //utilizar a veces append o open.or.create
+            FileStream flujo = new FileStream(nombreArchivo, FileMode.Append, FileAccess.Write);
+            StreamWriter escritor = new StreamWriter(flujo);
+            escritor.WriteLine(texto);
+            escritor.Close();
+        }
         private void button1_Click(object sender, EventArgs e)
         {
+            
             string url = comboBox1.Text.ToString();
             if (url.Contains(".") || url.Contains("/") || url.Contains(":"))
             {
@@ -50,6 +59,10 @@ namespace Navegador_Web
                     webView21.CoreWebView2.Navigate(url);
                 }
             }
+            Guardar("historial.txt", comboBox1.Text);
+            
+            comboBox1.Items.Add(comboBox1.Text.ToString());
+           
         }
 
         private void inicioToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,8 +83,18 @@ namespace Navegador_Web
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            comboBox1.SelectedIndex = 0;
-            
+            string nombreArchivo = @"C:\Users\aemendez\Downloads\Navegador_Web\Navegador_Web\bin\Debug\historial.txt";
+
+            FileStream flujo = new FileStream(nombreArchivo, FileMode.Open, FileAccess.Read);
+            StreamReader lector = new StreamReader(flujo);
+
+            while (lector.Peek() > -1)
+            {
+                string textoleido = lector.ReadLine();
+                comboBox1.Items.Add(textoleido);
+            }
+            lector.Close();
+
         }
     }
 }
