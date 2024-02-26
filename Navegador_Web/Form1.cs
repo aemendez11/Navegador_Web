@@ -13,11 +13,13 @@ namespace Navegador_Web
 {
     public partial class Form1 : Form
     {
+        List<URL> urls2 = new List<URL>();
         public Form1()
         {
             InitializeComponent();
             this.Resize += new System.EventHandler(this.Form_Resize);
         }
+       
         private void Form_Resize(object sender, EventArgs e)
         {
             webView21.Size = this.ClientSize - new System.Drawing.Size(webView21.Location);
@@ -29,17 +31,22 @@ namespace Navegador_Web
         {
 
         }
-        private void Guardar(string nombreArchivo, string texto)
+        private void Grabar(string Filename)
         {
             //utilizar a veces append o open.or.create
-            FileStream flujo = new FileStream(nombreArchivo, FileMode.Append, FileAccess.Write);
-            StreamWriter escritor = new StreamWriter(flujo);
-            escritor.WriteLine(texto);
-            escritor.Close();
+            FileStream stream = new FileStream(Filename, FileMode.OpenOrCreate, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+            foreach(var url in urls2)
+            {
+                writer.WriteLine(url.Pagina);
+                writer.WriteLine(url.Veces);
+                writer.WriteLine(url.Fecha);
+            }
+            writer.Close();
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             string url = comboBox1.Text.ToString();
             if (url.Contains(".") || url.Contains("/") || url.Contains(":"))
             {
@@ -59,10 +66,26 @@ namespace Navegador_Web
                     webView21.CoreWebView2.Navigate(url);
                 }
             }
-            Guardar("historial.txt", comboBox1.Text);
-            
-            comboBox1.Items.Add(comboBox1.Text.ToString());
-           
+
+            URL urlExiste = urls2.Find(u => u.Pagina == url);
+            if (urlExiste== null)
+            {
+                URL urlNueva = new URL();
+                urlNueva.Pagina = url;
+                urlNueva.Veces = 1;
+                urlNueva.Fecha = DateTime.Now;
+                urls2.Add(urlNueva);
+                Grabar("historial.txt");
+                webView21.CoreWebView2.Navigate(url);
+            }
+            else
+            {
+                urlExiste.Veces++;
+                urlExiste.Fecha = DateTime.Now;
+                Grabar("historial.txt");
+                webView21.CoreWebView2.Navigate(urlExiste.Pagina);
+            }
+
         }
 
         private void inicioToolStripMenuItem_Click(object sender, EventArgs e)
@@ -81,20 +104,30 @@ namespace Navegador_Web
             webView21.CoreWebView2.GoForward();
         }
 
+        private void leer()
+        {
+            string fileName = "historial.txt";
+            FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(stream);
+
+            while (reader.Peek() > -1)
+            {
+                URL url = new URL();
+                url.Pagina = reader.ReadLine();
+                url.Veces = Convert.ToInt32(reader.ReadLine());
+                url.Fecha = Convert.ToDateTime(reader.ReadLine());
+                urls2.Add(url);
+            }
+
+            reader.Close();
+            comboBox1.DisplayMember = "pagina";
+            comboBox1.DataSource = null;
+            comboBox1.DataSource = urls2;
+            comboBox1.Refresh();
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
-            string nombreArchivo = @"C:\Users\aemendez\Downloads\Navegador_Web\Navegador_Web\bin\Debug\historial.txt";
-
-            FileStream flujo = new FileStream(nombreArchivo, FileMode.Open, FileAccess.Read);
-            StreamReader lector = new StreamReader(flujo);
-
-            while (lector.Peek() > -1)
-            {
-                string textoleido = lector.ReadLine();
-                comboBox1.Items.Add(textoleido);
-            }
-            lector.Close();
-
+            leer();
         }
     }
 }
